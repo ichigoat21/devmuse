@@ -1,7 +1,7 @@
 {
   "scripts": { 
     "build" : "tsc -b",
-    "dev" : "tsc-b && bun src/index.ts"
+    "dev" : "tsc -b && bun dist/index.js"
   },
   "dependencies": {
     "@google/genai": "^1.43.0",
