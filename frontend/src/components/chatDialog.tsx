@@ -33,7 +33,7 @@ async function callApi(prompt: string): Promise<string> {
 
   try {
     res = await axios.post(`https://devmuse.onrender.com/api/ask`, {
-      body: JSON.stringify({ prompt }),
+      prompt : prompt,
     });
   } catch {
     // Network/CORS/connection failure

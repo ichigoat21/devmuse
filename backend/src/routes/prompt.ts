@@ -26,6 +26,8 @@ const promptRouter = Router()
 
 promptRouter.post("/ask", async (req, res)=> {
     const parsedPrompt = promptSchema.safeParse(req.body)
+    console.log(parsedPrompt)
+    console.log(parsedPrompt.data?.prompt)
     if(!parsedPrompt.success){
         res.status(400).json({
             message : "Please provide right Inputs."
