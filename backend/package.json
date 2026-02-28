@@ -1,4 +1,8 @@
 {
+  "scripts": { 
+    "build" : "tsc -b",
+    "dev" : "tsc-b && bun src/index.ts"
+  },
   "dependencies": {
     "@google/genai": "^1.43.0",
     "@types/cors": "^2.8.19",
