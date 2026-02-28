@@ -25,11 +25,12 @@ interface ApiError {
  *
  * Throws ApiError so the UI can show the right message for each case.
  */
+const Backend_URL = import.meta.env.VITE_BACKEND_URL
 async function callApi(prompt: string): Promise<string> {
   let res: Response;
 
   try {
-    res = await fetch("http://localhost:3000/api/ask", {
+    res = await fetch(`${Backend_URL}/api/ask`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt }),
