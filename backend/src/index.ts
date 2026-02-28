@@ -6,11 +6,7 @@ const app = express()
 
 
 app.use(express.json())
-app.use(cors({
-    origin: "*", 
-    methods: ["POST"],
-    allowedHeaders: ["Content-Type"]
-}))
+app.use(cors())
 app.use("/api", askLimiter, promptRouter)
 
 

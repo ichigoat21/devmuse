@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -26,13 +27,12 @@ interface ApiError {
  * Throws ApiError so the UI can show the right message for each case.
  */
 const Backend_URL = import.meta.env.VITE_BACKEND_URL
+console.log(Backend_URL)
 async function callApi(prompt: string): Promise<string> {
   let res: Response;
 
   try {
-    res = await fetch(`${Backend_URL}/api/ask`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    res = await axios.post(`https://devmuse.onrender.com/api/ask`, {
       body: JSON.stringify({ prompt }),
     });
   } catch {
