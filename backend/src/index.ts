@@ -8,7 +8,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 app.set("trust proxy", 1)
-app.use("/api", askLimiter, promptRouter)
+app.use("/api", promptRouter)
 
 
 app.listen(3000, ()=> {console.log("Server Is Listening")})
