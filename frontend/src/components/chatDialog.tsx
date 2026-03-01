@@ -29,52 +29,48 @@ interface ApiError {
 const Backend_URL = import.meta.env.VITE_BACKEND_URL
 console.log(Backend_URL)
 async function callApi(prompt: string): Promise<string> {
-  let res: Response;
-
   try {
-    res = await axios.post(`https://devmuse.onrender.com/api/ask`, {
-      prompt : prompt,
-    });
-  } catch {
-    // Network/CORS/connection failure
+    const res = await axios.post(
+      `${Backend_URL}/api/ask`,
+      { prompt }
+    );
+
+    // SUCCESS
+    return res.data.response;
+  } catch (err: any) {
+    // Axios error with response
+    if (err.response) {
+      const { status, data, headers } = err.response;
+
+      if (status === 400) {
+        throw {
+          message: data.message ?? "Invalid input.",
+          kind: "validation",
+        } satisfies ApiError;
+      }
+
+      if (status === 429) {
+        throw {
+          message: data.error ?? "Too many requests.",
+          kind: "rate_limit",
+          retryAfter: Number(headers["retry-after"] ?? 60),
+        } satisfies ApiError;
+      }
+
+      throw {
+        message: "Server error. Try again later.",
+        kind: "server",
+      } satisfies ApiError;
+    }
+
+    // Network / CORS / DNS failure
     throw {
-      message: "Can't reach the server. Check your connection and try again.",
+      message: "Can't reach the server.",
       kind: "network",
     } satisfies ApiError;
   }
-
-  // ── 400 Bad Request — Zod validation failed ──────────────────────────────
-  if (res.status === 400) {
-    const body = await res.json().catch(() => ({}));
-    throw {
-      message: body.message ?? "Your input is invalid. Keep it between 2 and 50 characters.",
-      kind: "validation",
-    } satisfies ApiError;
-  }
-
-  // ── 429 Too Many Requests — express-rate-limit hit ───────────────────────
-  if (res.status === 429) {
-    const body = await res.json().catch(() => ({}));
-    // express-rate-limit puts Retry-After in headers (seconds)
-    const retryAfter = Number(res.headers.get("Retry-After") ?? 60);
-    throw {
-      message: body.error ?? "You've sent too many requests. Please wait a minute before trying again.",
-      kind: "rate_limit",
-      retryAfter,
-    } satisfies ApiError;
-  }
-
-  // ── Any other non-OK ─────────────────────────────────────────────────────
-  if (!res.ok) {
-    throw {
-      message: `Server error (${res.status}). Try again in a moment.`,
-      kind: "server",
-    } satisfies ApiError;
-  }
-
-  const data = await res.json();
-  return data.response as string;
 }
+
 
 // ── Custom D Logo ──────────────────────────────────────────────────────────────
 function DevMuseLogo({ size = 32 }: { size?: number }) {
