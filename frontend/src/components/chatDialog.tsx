@@ -27,7 +27,6 @@ interface ApiError {
  * Throws ApiError so the UI can show the right message for each case.
  */
 const Backend_URL = import.meta.env.VITE_BACKEND_URL
-console.log(Backend_URL)
 async function callApi(prompt: string): Promise<string> {
   try {
     const res = await axios.post(

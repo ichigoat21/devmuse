@@ -6,11 +6,7 @@ const app = express()
 
 
 app.use(express.json())
-app.use(cors({
-    origin: "https://devmuse.vercel.app/",
-    methods: ["GET", "POST"],
-
-}))
+app.use(cors())
 app.set("trust proxy", 1)
 app.use("/api", askLimiter, promptRouter)
 
